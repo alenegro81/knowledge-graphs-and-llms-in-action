@@ -71,7 +71,7 @@ class MultiOmicAnalysis(GraphDBBase):
         """
         return self.get_data(query, {})
 
-    def compute_Bd(self, disease):
+    def compute_bd(self, disease):
         query = """
             MATCH (d:Disease {id:$id})-[:ASSOCIATED_WITH]->(p)
             WITH collect(p) as proteins
@@ -191,7 +191,7 @@ if __name__ == '__main__':
         results.append(disease_property)
 
         networkx_graph = analysis.load_hd(disease_id)
-        bd = analysis.compute_Bd(disease_id)
+        bd = analysis.compute_bd(disease_id)
         nodes_count = networkx_graph.nodes.__len__()
         edges_count = networkx_graph.edges.__len__()
         largest_cc = analysis.compute_largest_components(networkx_graph)

@@ -1,4 +1,4 @@
-:auto LOAD CSV FROM “file:///bio-pathways-network.csv” AS line
+:auto LOAD CSV FROM 'file:///PPI/bio-pathways-network.csv' AS line
 CALL {
     WITH line
     MERGE (f:Protein {id: trim(line[0])})
