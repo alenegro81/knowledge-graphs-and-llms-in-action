@@ -1,0 +1,7 @@
+:auto LOAD CSV WITH HEADERS FROM 'file:///PPI/bio-pathways-diseaseclasses.csv' AS line
+CALL {
+    WITH line
+    WITH line["Disease ID"] as diseaseId, line["Disease Class"] as class
+    MATCH (d:Disease {id:diseaseId})
+    SET d.class = class
+} IN TRANSACTIONS OF 100 ROWS

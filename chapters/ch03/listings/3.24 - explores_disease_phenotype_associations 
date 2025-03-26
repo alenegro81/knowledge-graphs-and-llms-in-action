@@ -1,0 +1,22 @@
+LOAD CSV FROM 'https://github.com/obophenotype/human-phenotype-ontology/releases/latest/download/phenotype.hpoa' AS row
+FIELDTERMINATOR '\t'
+WITH row
+SKIP 5
+MATCH (dis:HpoDisease)-[rel:HAS_PHENOTYPIC_FEATURE]->(phe:HpoPhenotype)
+WHERE phe.id = row[3] and dis.id = row[0]
+FOREACH(ignoreMe IN CASE WHEN row[4] is not null THEN [1] ELSE [] END|
+  SET rel.source = row[4])
+FOREACH(ignoreMe IN CASE WHEN row[5] is not null THEN [1] ELSE [] END|
+  SET rel.evidence = row[5])
+FOREACH(ignoreMe IN CASE WHEN row[6] is not null THEN [1] ELSE [] END|
+  SET rel.onset = row[6])
+FOREACH(ignoreMe IN CASE WHEN row[7] is not null THEN [1] ELSE [] END|
+  SET rel.frequency = row[7])
+FOREACH(ignoreMe IN CASE WHEN row[8] is not null THEN [1] ELSE [] END|
+  SET rel.sex = row[8])
+FOREACH(ignoreMe IN CASE WHEN row[9] is not null THEN [1] ELSE [] END|
+  SET rel.modifier = row[9])
+FOREACH(ignoreMe IN CASE WHEN row[10] is not null THEN [1] ELSE [] END|
+  SET rel.aspect = row[10])
+FOREACH(ignoreMe IN CASE WHEN row[11] is not null THEN [1] ELSE [] END| 
+  SET rel.biocuration = row[11])

@@ -1,0 +1,8 @@
+neo4j~=4.4
+tenacity==8.2.3
+tqdm==4.66.1
+requests==2.31.0
+spacy~=3.6
+pytextrank~=3.2
+
+

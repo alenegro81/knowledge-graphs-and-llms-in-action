@@ -1,0 +1,38 @@
+Our user ask this question:
+<QUESTION>
+{{ question }}
+</QUESTION>
+
+To answer the question we decided to run this cypher query:
+<QUERY>
+{{ query }}
+</QUERY>
+
+The query returned a {{ output_type }} with this data:
+<RESULTS>
+ {{ records }}
+<RESULTS>
+
+{%if selection -%}
+Current selection:
+{% for node in selection%}
+ - {{node.label}} node with this properties {{node.properties}}
+{% endfor %}
+{%-endif-%}
+
+Your task is to summarise the results we sent to the user with the information just provided. Consider that the user will see the results in a graph format within a graphical user interface but we want also to provide a textual summary along with the canvas.
+Please keep in mind that many of the resulting data is actually irrelevant considering the question, but is returned anyway for completeness. Your job is to filter out this data so the summary contains only factual information that is relavant considering the question.
+
+Does the question request analysis of the returned data? If so, include few sentences to extract the requested analysis/insight.
+
+This is the question again
+<QUESTION>
+{{ question }}
+</QUESTION>
+
+Answer only in valid JSON in the following JSON format, nothing else (no <ANSWER> tags or code blocks and so on):
+{
+  "results_analysis": true|false, Check if the questions contains implicit or explicit request of analysis of the returned raw data
+  "reasoning": "...", Scratch pad for your reasoning. include reasoning about the summary and reasoning about the result analysis if needed
+  "summary": "..." must be a string and a meaningful an factual summary (use \n and basic markdown tags to to highlight the important bits. do not use headers belov level 4 ).
+}

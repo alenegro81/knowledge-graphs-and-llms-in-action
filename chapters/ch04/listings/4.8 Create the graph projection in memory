@@ -1,0 +1,9 @@
+call gds.graph.project(
+    'ppi-graph',
+    'PPIProtein',
+    {
+        INTERACTS_WITH: {
+            orientation: 'UNDIRECTED'
+        }
+    }
+)

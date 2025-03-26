@@ -1,0 +1,93 @@
+{%- macro examples_data(ee) -%}
+ {%-if ee|length > 0 -%}
+   {%-for e in ee%}
+Examples:
+<QUESTION>{{e.question}}</QUESTION>
+{
+  ...
+  "query": "{{e.answer}}"
+  {{ '"reasoning":"'+e.reasoning+'"' if e.reasoning else "..." }}
+}
+   {%-endfor -%}
+ {%-else -%}
+Example:
+<QUESTION>Return 10 Establishments located in Greece</QUESTION>
+{
+  ...
+  "query": "MATCH (s:SOHOEstablishment)-[r:LOCATED_IN_MS]->(m:MemberState) WHERE m.name = 'Greece' RETURN s,r,m LIMIT 10"
+  ...
+}
+Example:
+<QUESTION>For each Person, return the Organization to which he belongs</QUESTION>
+{
+  ...
+  "query": "MATCH (p:Person)-[r:MEMBER_OF]->(o:Organisation) RETURN p,r,o"
+  ...
+}
+ {%-endif -%}
+{%- endmacro -%}
+
+Your task is to generate a Cypher query for a Neo4j graph database, based on the schema definition provided, that answers the user Question.
+
+The question we need to answer is:
+<QUESTION>
+{{ question }}
+</QUESTION>
+
+The knowledge graph has the following schema, which the Cypher query must follow:
+<SCHEMA>
+{{ schema }}
+</SCHEMA>
+consider the comments as annotations
+
+{%if output_type == "graph" or output_type == "map" -%}
+The result must be a graph so make sure to follow the schema and the following requirements:
+- Return all the nodes and relationships matched,do not use anonymous relationships ( such has (node0)-[:RELATIONSHIP]->(node1) instead use (node0)-[rel0:RELATIONSHIP]->(node1)
+- Aggregate multiple traversals in a single MATCH pattern if possible: `MATCH path=(p:Person)-[acted:ACTED_IN]->(m:Movie)<-[directed:DIRECTED]-(d:Director) RETURN path` instead of  `MATCH path=(p:Person)-[acted:ACTED_IN]->(m:Movie), (d:Director)-[directed:DIRECTED]->(m)`
+{%-endif%}
+
+{%if output_type == "table" -%}
+The result must be a table, i.e. you must should select nodes and relationships properties and rename them to be presented in a table
+{%-endif-%}
+
+Use only the provided labels, relationships and properties, do not use anything else that is not specified.
+If you cannot generate a Cypher statement based on the provided schema, explain the reason to the user.
+
+{{examples_data(annotations.examples)}}
+
+You must respect relationship types and directions.
+
+{%if selection -%}
+Current selection:
+{% for node in selection%}
+ - {{node.label}} node with this properties {{node.properties}}
+{% endfor %}
+{%-else-%}
+The selection is currently EMPTY. If there are references to selected nodes in the question, it is almost
+certainly an error and therefore it is not possible to generate a response.
+In this case, 'success' should be false.
+{%-endif-%}
+
+{{annotations.notes if annotations.notes}}
+
+Do not include any explanations or apologies in your responses.
+The question we like to answer may have some information that is relevant for the Cypher query:
+<QUESTION_WITH_INFORMATION>
+{{ question }} {{ information }}
+</QUESTION_WITH_INFORMATION>
+
+{%if output_type == "graph" or output_type == "map" -%}
+Remeber the requirements:
+- Return all the nodes and relationships matched, never use anonymous relationships(ie [:RELATIONSHIP]), always use named ones (ie [rel1:RELATIONSHIP]).
+- Aggregate multiple traversals in a single MATCH pattern if possible
+{%-endif%}
+
+Use the "reasoning" field to explain your plan for the cypher query
+
+Answer only in valid JSON in the following JSON format, nothing else (no <ANSWER> tags or anything like that):
+{
+  "relationships": [...], list of relationships to traverse, empty if not traversal is needed
+  "reasoning": "...", this is the scratch pad for your reasoning, make sure it is not empty
+  "query": "<Cypher query>", must be a string and a valid Cypher query.
+  "success": <true/false>, where true means that a Cypher query (following the schema) was returned.
+}

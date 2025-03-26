@@ -1,0 +1,8 @@
+CALL gds.nodeSimilarity.stream(
+    "MiRNA_Target_similarity",
+    {relationshipWeightProperty: 'value'})
+YIELD node1,node2, similarity
+WITH gds.util.asNode(node1) AS source,
+     gds.util.asNode(node2) AS target, similarity
+RETURN source.name AS source, target.name AS target, similarity
+ORDER BY similarity DESC, source , target

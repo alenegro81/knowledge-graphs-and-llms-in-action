@@ -1,0 +1,7 @@
+:auto LOAD CSV FROM “file:///bio-pathways-network.csv” AS line
+CALL {
+    WITH line
+    MERGE (f:Protein {id: trim(line[0])})
+    MERGE (s:Protein {id: trim(line[1])})
+    MERGE (f)-[:INTERACTS_WITH]->(s)
+} IN TRANSACTIONS OF 100 ROWS

@@ -1,0 +1,9 @@
+neo4j==4.4.11
+openai==1.12.0
+d3graph==2.5.0
+scikit-learn==1.5.2
+langgraph==0.2.19
+langchain-ollama==0.2.0
+langchain-openai==0.2.8
+streamlit==1.39.0
+streamlit-d3graph==1.0.3

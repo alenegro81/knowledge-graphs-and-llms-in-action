@@ -1,0 +1,10 @@
+CALL gds.graph.project.cypher(
+    "NormalizedDiseaseDistance",
+    "MATCH (n:MiRNA) return id(n) as id",
+    "MATCH p1=(a:MiRNA)-[:REGULATES|RELATED_TO]->()-[:REPRESENTS]->(d)
+     MATCH p2=(d)<-[:REPRESENTS]-()<-[:REGULATES|RELATED_TO]-(b:MiRNA)
+     WHERE id(a)<id(b)
+     RETURN distinct
+           id(a) as source,
+           id(b) as target")
+

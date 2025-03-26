@@ -1,0 +1,4 @@
+MATCH path = ()<-[:WORKS_ON|WORKS_FOR]-(p2:Person) -[:TALKED_ABOUT|TALKED_WITH|WORKS_WITH|STUDENT_OF*1..2]->
+(p:Person)-[:WORKS_ON]->()-[:SIMILAR_OCCUPATION*0..1]-(o:Occupation)
+WHERE o.name = toLower($occupation) AND NOT ANY(x IN nodes(path) WHERE x.name = "WW")
+RETURN path

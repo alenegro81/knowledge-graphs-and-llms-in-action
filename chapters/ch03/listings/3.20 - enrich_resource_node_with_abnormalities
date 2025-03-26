@@ -1,0 +1,5 @@
+MATCH (n:Resource) 
+WHERE n.uri STARTS WITH "http://purl.obolibrary.org/obo/HP" 
+SET n:HpoPhenotype, 
+       n.id = coalesce(n.id,
+   replace(apoc.text.replace(n.uri,'(.*)obo/',''),'_', ':'))

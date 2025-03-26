@@ -1,0 +1,8 @@
+MATCH path1=(n:HpoPhenotype)<-[:SUBCLASSOF]-(m:HpoPhenotype)
+WHERE n.label = "Diabetes mellitus"
+WITH path1
+MATCH path2=(i:HpoPhenotype)<-[:ANNOTATEDSOURCE]-(j)
+WHERE i.label in ["Diabetes mellitus", "Type I diabetes mellitus"]
+WITH path1, path2, j
+MATCH path3=(j)-[:ANNOTATEDPROPERTY|HASSYNONYMTYPE]-()
+RETURN path1, path2, path3

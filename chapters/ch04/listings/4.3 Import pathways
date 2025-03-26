@@ -1,0 +1,13 @@
+:auto LOAD CSV WITH HEADERS FROM 'file:///PPI/bio-pathways-associations.csv' AS line
+CALL {
+    WITH line
+    WITH trim(line["Associated Gene IDs"]) AS proteins,
+         trim(line["Disease Name"]) AS diseaseName,
+         trim(line["Disease ID"]) AS diseaseId
+    MERGE (d:Disease {id: diseaseId, name: diseaseName})
+    WITH d, proteins
+    UNWIND split(proteins, ",") AS protein
+    WITH d, protein
+    MERGE (p:Protein {id: trim(protein)})
+    MERGE (d)-[:ASSOCIATED_WITH]->(p)
+} IN TRANSACTIONS OF 100 ROWS

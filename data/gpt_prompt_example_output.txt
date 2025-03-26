@@ -1,0 +1,12 @@
+{"entities":{"diary entry date":[{"id":0,"name":"Friday, February 19, 2023"}],
+"person":[{"id":1,"name":"WW","titles":[]},{"id":2,"name":"Jose Jewell","titles":["Dean", "PhD."]},{"id":3,"name":"Peter Stafford","titles":["Dr.","Professor of Physics"]},{"id":4,"name":"William Meade","titles":["Professor"]},{"id":5,"name":"Andrews","titles":["Doctor"]},{"id":6,"name":"J. W. Allen","titles":["Professor","lead nuclear physicist"]}],
+"organization":[{"id":7,"name":"Department of Physics, University of Pennsylvania"},{"id":8,"name":"Johns Hopkins University"}],
+"date":[{"id":9,"name":"August 2022"}],
+"occupation":[{"id":10,"name":"magnets","label":"occupation","type":"technology"},{"id":11,"name":"organic and anorganic reactions","label":"occupation","type":"chemistry discipline"},{"id":12,"name":"calorimeter","label":"occupation","type":"technology"},{"id":13,"name":"radioisotopes","type":"physics discipline"},{"id":14,"name":"high energy accelerator","type":"technology"}]},
+"relations":{"visits": [{"source":1,"target":7}],
+"talked with":[{"source":1,"target":2},{"source":1,"target":3},{"source":2,"target":3},{"source":1,"target":4,"type":"lunch"},{"source":1,"target":6,"type":"lunch"},{"source":4,"target":6,"type":"lunch"}],
+"works for":[{"source":2,"target":7},{"source":3,"target":7},{"source":4,"target":8},{"source":5,"target":8},{"source":6,"target":8}],
+"works on":[{"source":3,"target":10,"since":"August 2022"},{"source":4,"target":11},{"source":4,"target":12},{"source":5,"target":11},{"source":5,"target":12},{"source":6,"target":13},{"source":6,"target":14}],
+"talked about":[{"source":4,"target":5,"sentiment":"positive"},{"source":4,"target":3,"sentiment":"negative"},{"source":6,"target":3,"sentiment":"neutral"}],
+"student of":[{"source":5,"target":4}],
+"works with":[{"source":4,"target":5}]}}

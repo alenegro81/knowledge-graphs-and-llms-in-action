@@ -1,0 +1,5 @@
+# Add the following line to the neo4j.conf file
+# dbms.databases.seed_from_uri_providers=URLConnectionSeedProvider
+# then run the following command
+
+CREATE DATABASE hetionet OPTIONS { existingData: "use", seedUri: "https://downloads.graphaware.com/neo4j-db-seeds/hetionet-5.26.4-2025-03-22T11-39-51.backup"}

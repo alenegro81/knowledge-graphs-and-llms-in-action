@@ -1,0 +1,5 @@
+CALL gds.graph.project("Disease_Target_similarity",
+                  ["Target","MiRNA","Disease"],
+                  {"HAS_TARGET":{orientation:"UNDIRECTED"},
+                   "RELATED_TO":{orientation:"UNDIRECTED"},
+                   "SIMILAR_TO":{orientation:"UNDIRECTED"}})

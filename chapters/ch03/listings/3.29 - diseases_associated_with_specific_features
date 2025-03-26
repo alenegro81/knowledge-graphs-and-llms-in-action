@@ -1,0 +1,11 @@
+MATCH (phe:HpoPhenotype)
+WHERE phe.label in ["Growth delay", "Large knee", "Sensorineural hearing impairment", "Pruritus", "Type I diabetes mellitus"]
+WITH phe
+MATCH path=(dis:HpoDisease)-[:HAS_PHENOTYPIC_FEATURE]->(phe)
+UNWIND dis as nodes
+RETURN dis.id as disease_id, 
+dis.label as disease_name,
+collect(phe.label) as features,
+count(nodes) as num_of_features
+ORDER BY num_of_features DESC, disease_name
+LIMIT 5

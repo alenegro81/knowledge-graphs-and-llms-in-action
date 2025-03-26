@@ -1,0 +1,3 @@
+http://mlg.ucd.ie/datasets/bbc.html
+
+https://www.kaggle.com/c/learn-ai-bbc/data?select=BBC+News+Test.csv

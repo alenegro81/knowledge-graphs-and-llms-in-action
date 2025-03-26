@@ -1,0 +1,21 @@
+MATCH path = (n0:Disease)-[:ASSOCIATES_DaG]-(n1)-[:PARTICIPATES_GpBP]-(n2:BiologicalProcess)
+WHERE n0.name = 'celiac disease'
+WITH
+[
+  size([(n0)-[:ASSOCIATES_DaG]-() | n0]),
+  size([()-[:ASSOCIATES_DaG]-(n1) | n1]),
+  size([(n1)-[:PARTICIPATES_GpBP]-() | n1]),
+  size([()-[:PARTICIPATES_GpBP]-(n2) | n2])
+]
+AS degrees, path, n2
+WITH
+  n2.identifier AS go_id,
+  n2.name AS go_name,
+  count(path) AS PC,
+  sum(reduce(pdp = 1.0, d in degrees| pdp * d ^ -0.4)) AS DWPC,
+  size([(n2)-[:PARTICIPATES_GpBP]-() | n2]) AS n_genes
+  WHERE n_genes >= 5 AND PC >= 2
+RETURN
+  go_id, go_name, PC, DWPC, n_genes
+ORDER BY DWPC DESC
+LIMIT 10

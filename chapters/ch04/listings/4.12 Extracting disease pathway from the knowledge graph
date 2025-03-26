@@ -1,0 +1,6 @@
+MATCH (d:Disease {id:$id})-[:ASSOCIATED_WITH]->(p)
+WITH collect(p) as proteins
+UNWIND proteins as m0
+UNWIND proteins as m1
+OPTIONAL MATCH (m0)-[r:INTERACTS_WITH]->(m1)
+RETURN DISTINCT m0, r, m1

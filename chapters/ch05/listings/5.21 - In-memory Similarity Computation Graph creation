@@ -1,0 +1,3 @@
+CALL gds.graph.project("MiRNA_Target_similarity",
+                       ["Target","MiRNA"],
+                       {HAS_TARGET:{properties:["value"]}})

@@ -1,0 +1,38 @@
+schema:
+    node_styles:
+        Person:
+            color: "#FF7F3E"
+            caption: "last_name"
+            icon: "person"
+        Crime:
+            color: "#2A629A"
+            caption: "primary_type"
+            icon: "swap_horiz"
+            geo: position
+            map_color: "cadetblue"
+        Vehicle:
+            color: "#AEE670"
+            caption: "plate_norm"
+            icon: "directions_car"
+        ANPRCameraEvent:
+            color: "#CB8BFB"
+            caption: "timestamp"
+            icon: "link"
+        ANPRCamera:
+            color: "#F3C14A"
+            caption: "label"
+            icon: "smartphone"
+            geo: position
+            map_color: "orange"
+        Location:
+            color: "#4C407E"
+            caption: "label"
+            icon: "place"
+            geo: position
+            map_color: "purple"
+    relationship_styles:
+        PLATE_READ_EVENT: {}
+        OWNED_BY: {}
+        COMMITTED: {}
+        HAS_EVENT: {}
+        OCCURRED_AT: {}

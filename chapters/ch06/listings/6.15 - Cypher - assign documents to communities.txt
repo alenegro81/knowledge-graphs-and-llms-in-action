@@ -1,0 +1,9 @@
+MATCH (n:Document)
+WHERE n.community is not Null
+WITH n.community AS com, collect(n) AS docs
+WHERE size(docs) > 4
+MERGE (c:Community {id: com})
+SET c.n_docs = size(docs)
+WITH c, docs
+UNWIND docs AS doc
+MERGE (doc)-[:BELONGS_TO]->(c)

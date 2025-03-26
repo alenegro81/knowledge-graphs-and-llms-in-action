@@ -1,0 +1,9 @@
+MATCH (p:PPIProtein)
+WITH p.componentLouvainId as communityId, count(p) as members
+ORDER BY members desc
+LIMIT 10
+MATCH (p:PPIProtein)-[:INTERACTS_WITH]-(o)
+WHERE p.componentLouvainId = communityId
+WITH communityId, members, p.name as name, count(o) as connections
+ORDER BY connections DESC
+RETURN communityId, members, collect(name)[..20] as keyMembers

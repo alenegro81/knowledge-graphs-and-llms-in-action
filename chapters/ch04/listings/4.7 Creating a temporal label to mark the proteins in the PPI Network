@@ -1,0 +1,2 @@
+MATCH (p:Protein)-[:INTERACTS_WITH]-()
+SET p:PPIProtein
