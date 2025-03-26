@@ -1,0 +1,9 @@
+CALL apoc.periodic.iterate(
+    "MATCH (n:Resource) RETURN id(n) as id",
+    "MATCH (n)
+     WHERE id(n) = id AND
+           NOT 'HpoPhenotype' in labels(n) AND
+           NOT 'HpoDisease' in labels(n)
+     DETACH DELETE n",
+     {batchSize:10000})
+YIELD batches, total return batches, total

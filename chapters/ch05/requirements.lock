@@ -1,0 +1,8 @@
+bio==1.5.9
+neo4j==4.4.11
+pandas==2.1.0
+xlrd==2.0.1
+scispacy==0.5.1
+biopython==1.85
+xlrd==2.0.1
+https://s3-us-west-2.amazonaws.com/ai2-s2-scispacy/releases/v0.5.1/en_core_sci_sm-0.5.1.tar.gz

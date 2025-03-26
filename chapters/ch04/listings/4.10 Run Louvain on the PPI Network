@@ -1,0 +1,3 @@
+CALL gds.louvain.write('ppi-graph',
+{ writeProperty: 'componentLouvainId' })
+YIELD communityCount, modularity, modularities, communityDistribution

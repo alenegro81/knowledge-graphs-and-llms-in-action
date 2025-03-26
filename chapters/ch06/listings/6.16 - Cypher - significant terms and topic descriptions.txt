@@ -1,0 +1,8 @@
+MATCH (c:Community)<-[:BELONGS_TO]-(n:Document)-[:MENTIONS_KEYWORD]->(k)
+WHERE k.n_docs > 3
+WITH c, k, count(*) AS n_k
+WITH c, k, 1.0 * n_k / c.n_docs AS comm_freq
+WITH c, k, comm_freq, (comm_freq - k.doc_freq) * comm_freq / k.doc_freq AS score
+ORDER BY score DESC, comm_freq DESC
+WITH c, collect(k.name)[..30] AS kws
+SET c.significant_terms = kws

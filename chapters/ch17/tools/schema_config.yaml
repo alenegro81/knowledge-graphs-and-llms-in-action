@@ -1,0 +1,38 @@
+schema:
+    skip:
+        classes: ["RAW", "Placeholder", "Processed"]
+        relationships: ["JUMPTARGETS"]
+        properties : ["decoding_confidence", "type", "source_index", "isrelated",
+                      "deleted_state", "extractSource",
+                      "extractionId", "dumpSource",
+                      "charges_class", "charges_description", "charges_statute",
+                      "charges_type", "charges_FBI_code",
+                      "x_coordinate", "y_coordinate"]
+    descriptions:
+        classes:
+            Arrest: Contains up to 4 charges described with the properties charge_[1|2|3|4]_xyz
+            ANPRCameraEvent: >-
+                Represent the fact that an ANPRCamera captured a Vehicle, it is usefull only if
+                expanded along with its camera and the selected vehicle
+        relationships: {}
+        properties:
+            Arrest:
+                cb_no: entral Booking Number, a unique idenfier for the arrest records
+                arrest_date: date and time of the arrest in  MM/DD/YYYY HH:MM:SS AM/PM format
+                charge_1_class: first charge One letter Illinois Felony Classification System
+            Crime:
+                IUCR: Illinois Uniform Crime Reporting code
+                date: date and time of the crime in ISO 8601 format
+                status: optional investigation status. Values are “investigation”, “close”
+                position: Position of the reported incident
+            ARRESTED_DURING:
+                received_in_lockup: date and time of lockup in MM/DD/YYYY HH:MM:SS AM/PM format
+                released_from_lockup: optional date and time of release in MM/DD/YYYY HH:MM:SS AM/PM format
+            Vehicle:
+                color: >-
+                     color abbr. code (valid values include BLK, GRY, SIL, WHI, BGE, GRN, CRM, TAN, LBL, BLU, RED,
+                     BRO, MAR, DBL, GLD, YEL, TRQ, PLE, ONG, DGR, LGR, BRZ)
+                model: "model abbr. code (es: TK, 300, ELN, ACC, ODY, CHL, DUR, IMP, ALT, SON, SEB, CIV)"
+                make: "maker abbr. in capital (es: BMW, BUIC, CADI, CHEV, DODG, FIAT, FORD, GMC, HOND, HYUN, LEXS, LINC, MAZD, NISS)"
+
+

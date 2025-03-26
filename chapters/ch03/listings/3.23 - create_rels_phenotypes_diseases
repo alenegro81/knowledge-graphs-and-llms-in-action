@@ -1,0 +1,9 @@
+LOAD CSV FROM 'https://github.com/obophenotype/human-phenotype-ontology/releases/latest/download/phenotype.hpoa' AS row
+FIELDTERMINATOR '\t'
+WITH row
+SKIP 5
+MATCH (dis:HpoDisease)
+WHERE dis.id = row[0]
+MATCH (phe:HpoPhenotype)
+WHERE phe.id = row[3]
+MERGE (dis)-[:HAS_PHENOTYPIC_FEATURE]->(phe)

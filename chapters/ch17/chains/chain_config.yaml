@@ -1,0 +1,39 @@
+notes: >
+    - all POINTS properties are Neo4j Points (`point.distance()` and similar function works for them)
+    - do not use path for single node expansion.
+    - whenever you have to traverse one relationship, expand and return the entire path.
+    - use path1,path2 and so on if you have to match multiple paths
+    - do not expand ANPRCameraEvent unless you have to connect to both Vehicle and ANPRCamera
+    - a previous offender o know offender is defined by the fact that it is connected to crimes.
+examples:
+    - question: Crimes that occurred on March 14th, 2025
+      answer: MATCH (c:Crime)  WHERE c.date starts with "2025-03-14"
+      reasoning: >-
+          To find the crimes that occurred in that data we leverage the <b>date</b>  property of the crime node.
+          Since it is formatted as ISO string we can use the prefix "2025-03-14" to get all crimes occurred in that day.
+          Since there are no traversal no paths are returned
+    - question: Find the vehicles detected by an ANPR camera on March 14th, 2025
+      answer: >-
+          MATCH path = (vehicle:Vehicle)<-[plate_read_event:PLATE_READ_EVENT]-(cameraevent:ANPRCameraEvent)
+                       <-[has_event:HAS_EVENT]-(camera:ANPRCamera)
+                       WHERE cameraevent.timestamp STARTS WITH 2025-03-14 RETURN path
+      reasoning: >-
+          To find the vehicles detected by camera on March 14th 2025, we need to traverse the
+          ANPRCamera ->  ANPRCameraEvent -> Vehicle through the respective relationships.
+          Since the ANPRCameraEvent has a timestamp attribute that representthe  date and time of capture event in
+          ISO format, we can use the prefix '2023-06-13' to filter events on that date.
+          We finally return the traversal as a path
+    - question: return one male known offender aged 20 to 22.
+      answer: >-
+          MATCH path0 = (person0:Person)-[committed0:COMMITTED]->(crime0:Crime)
+          WHERE (person0.sex CONTAINS 'MALE' AND person0.age >= 20 AND person0.age <= 22) RETURN path0 LIMIT 1
+prompts:
+    text_to_cypher:
+        system: >-
+            Your task is to generate a Cypher query for a Neo4j graph database, based on the schema definition provided,
+            that answers the user Question.
+        template: templates/text_to_cypher.template
+    intent_detection:
+        template: templates/intent_detection.template
+    generate_summary:
+        template: templates/summary.template

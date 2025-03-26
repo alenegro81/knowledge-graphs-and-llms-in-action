@@ -1,0 +1,2 @@
+CALL gds.louvain.write('undirectedDocs', {relationshipWeightProperty: 'similarity', writeProperty: 'community'})
+YIELD communityCount, modularity, modularities

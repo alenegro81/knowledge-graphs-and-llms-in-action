@@ -1,0 +1,5 @@
+# Add the following line to the neo4j.conf file
+# dbms.databases.seed_from_uri_providers=URLConnectionSeedProvider
+# then run the following
+
+CREATE DATABASE ckg OPTIONS { existingData: "use", seedUri: "https://downloads.graphaware.com/neo4j-db-seeds/ckg-5.4.0-2023-02-09T19-05-59.backup"}

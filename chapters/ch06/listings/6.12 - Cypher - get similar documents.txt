@@ -1,0 +1,8 @@
+MATCH (n)
+WHERE n.id = "business_173"
+MATCH (n)-[r:SIMILAR_TO]-(n2:Document)
+WITH n, r, n2
+ORDER BY r.similarity DESC
+LIMIT 10
+MATCH p=(n)-[:MENTIONS_KEYWORD]->()<-[:MENTIONS_KEYWORD]-(n2)
+RETURN p

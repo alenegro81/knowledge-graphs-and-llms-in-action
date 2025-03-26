@@ -1,0 +1,17 @@
+#Install Neo4j's GDS library.
+
+MATCH (n:Document)-[:MENTIONS_KEYWORD]->(k)<-[:MENTIONS_KEYWORD]-(n2:Document)
+WHERE n <> n2
+WITH n, n2, collect(id(k)) AS kws_shared
+WHERE size(kws_shared) > 2
+MATCH (n)-[:MENTIONS_KEYWORD]->(k)
+WITH n, n2, collect(id(k)) AS kws1
+MATCH (n2)-[:MENTIONS_KEYWORD]->(k)
+WITH n, n2, kws1, collect(id(k)) AS kws2
+
+UNWIND kws1 + kws2 AS x
+WITH n, n2, collect(CASE WHEN x IN kws1 THEN 1 ELSE 0 END) AS vec1, collect(CASE WHEN x IN kws2 THEN 1 ELSE 0 END) AS vec2
+WITH n, n2, gds.similarity.cosine(vec1, vec2) AS similarity
+
+MERGE (n)-[r:SIMILAR_TO]-(n2)
+SET r.similarity_cosine = similarity

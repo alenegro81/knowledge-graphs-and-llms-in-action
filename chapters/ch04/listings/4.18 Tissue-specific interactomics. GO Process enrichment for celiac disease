@@ -1,0 +1,24 @@
+MATCH path = (n0:Disease)-[e1:ASSOCIATES_DaG]-(n1)-[:INTERACTS_GiG]-(n2)-[:PARTICIPATES_GpBP]-(n3:BiologicalProcess)
+WHERE n0.name = 'celiac disease'
+  AND 'GWAS Catalog' in e1.sources
+  AND exists((n0)-[:LOCALIZES_DlA]-()-[:UPREGULATES_AuG]-(n2))
+WITH
+[
+  size([(n0)-[:ASSOCIATES_DaG]-() | n0]),
+  size([()-[:ASSOCIATES_DaG]-(n1) | n1]),
+  size([(n1)-[:INTERACTS_GiG]-() | n1]),
+  size([()-[:INTERACTS_GiG]-(n2) | n2]),
+  size([(n2)-[:PARTICIPATES_GpBP]-() | n2]),
+  size([()-[:PARTICIPATES_GpBP]-(n3) | n3])
+] AS degrees, path, n3 as target
+WITH
+  target.identifier AS go_id,
+  target.name AS go_name,
+  count(path) AS PC,
+  sum(reduce(pdp = 1.0, d in degrees| pdp * d ^ -0.4)) AS DWPC,
+  size([(target)-[:PARTICIPATES_GpBP]-() | target]) AS n_genes
+  WHERE 5 <= n_genes <= 100 AND PC >= 2
+RETURN
+  go_id, go_name, PC, DWPC, n_genes
+ORDER BY DWPC DESC
+LIMIT 10

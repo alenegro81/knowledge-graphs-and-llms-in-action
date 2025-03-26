@@ -1,0 +1,3 @@
+CALL gds.alpha.allShortestPaths.stream('NormalizedDiseaseDistance',{})
+YIELD distance
+RETURN distinct Distance, count(distance) AS Count

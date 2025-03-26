@@ -1,0 +1,10 @@
+CALL gds.graph.project(
+  'undirectedDocs',
+  'Document',
+  {SIMILAR_TO: {orientation: 'UNDIRECTED', properties: 'similarity'}}
+)
+YIELD
+  graphName AS graph,
+  relationshipProjection AS knowsProjection,
+  nodeCount AS nodes,
+  relationshipCount AS rels

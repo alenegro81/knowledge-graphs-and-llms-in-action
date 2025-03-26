@@ -1,0 +1,9 @@
+MATCH (n:MiRNA)
+WITH 
+ DISTINCT LABELS(n) AS labels,
+ COUNT(*) as count
+RETURN
+ [l in labels where  "MiRNA"<> l ] AS labels,
+ count
+ORDER by count DESC
+

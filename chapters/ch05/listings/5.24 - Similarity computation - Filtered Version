@@ -1,0 +1,11 @@
+CALL gds.alpha.nodeSimilarity.filtered.stream(
+    "Disease_Target_similarity",
+    {sourceNodeFilter:"Disease",targetNodeFilter:"Target"})
+yield node1,node2, similarity
+WITH gds.util.asNode(node1) AS source,
+     gds.util.asNode(node2) AS target, similarity
+MATCH (source)-[]-(m:MiRNA)-[:HAS_TARGET]-(target)
+WITH source, target, similarity, count(m) as miRNAs
+WHERE miRNAs > 10
+RETURN source.name AS source, target.name AS target, similarity, miRNAs
+ORDER BY similarity DESCENDING, source , target

@@ -1,0 +1,4 @@
+MATCH p=(source)-[]-(m:MiRNA)-[:HAS_TARGET]-(target)-[:HAS_TARGET]-()
+WHERE source.name = "meningioma"
+  AND target.name = "NM_203347"
+RETURN p

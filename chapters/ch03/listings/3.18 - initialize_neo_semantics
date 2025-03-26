@@ -1,0 +1,3 @@
+CALL n10s.graphconfig.init();
+CALL n10s.graphconfig.set({ handleVocabUris: "IGNORE" });
+CALL n10s.graphconfig.set({ applyNeo4jNaming: True });

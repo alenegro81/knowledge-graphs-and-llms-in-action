@@ -1,0 +1,6 @@
+MATCH path = (n0:Disease)-[e1:ASSOCIATES_DaG]-(n1)-[:INTERACTS_GiG]-(n2)-[:PARTICIPATES_GpBP]-(n3:BiologicalProcess)
+WHERE n0.name = 'celiac disease'
+  AND n3.name = 'positive regulation of glycoprotein biosynthetic process'
+  AND 'GWAS Catalog' in e1.sources
+  AND exists((n0)-[:LOCALIZES_DlA]-()-[:UPREGULATES_AuG]-(n2))
+RETURN path

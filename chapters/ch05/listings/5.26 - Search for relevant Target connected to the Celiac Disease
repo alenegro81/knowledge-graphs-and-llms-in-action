@@ -1,0 +1,16 @@
+MATCH path = (d:Disease)<-[:REGULATES|RELATED_TO]-(m)-[:HAS_TARGET]->(t)
+WHERE d.name = "celiac disease"
+WITH
+[
+  size((d)<-[:REGULATES|RELATED_TO]-()),
+  size(()<-[:REGULATES|RELATED_TO]-(m)),
+  size((m)-[:HAS_TARGET]->()),
+  size(()-[:HAS_TARGET]->(t))
+]
+AS degrees, path, d, t
+WITH d.name as disease_name, t.name as target_name, count(path) as PC, sum(reduce(pdp = 1.0, d in degrees| pdp * d ^ -0.4)) AS DWPC,
+  size((t)-[:HAS_TARGET]-()) AS n_miRNA
+WHERE n_miRNA >= 5 and PC >= 2
+RETURN disease_name, target_name, PC, DWPC, n_miRNA
+ORDER BY DWPC desc
+LIMIT 10

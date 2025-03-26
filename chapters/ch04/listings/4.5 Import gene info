@@ -1,0 +1,9 @@
+:auto LOAD CSV WITH HEADERS FROM 'file:///PPI/gene_info' AS line FIELDTERMINATOR '\t'
+CALL {
+    WITH line
+    WITH trim(line["GeneID"]) AS proteinId, trim(line["Symbol"]) AS symbol,
+    trim(line["description"]) AS description
+    WITH proteinId, symbol, description
+    MATCH (p:Protein {id:proteinId})
+    SET p.name = symbol, p.description = description
+} IN TRANSACTIONS OF 100 ROWS

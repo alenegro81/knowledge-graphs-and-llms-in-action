@@ -1,0 +1,31 @@
+Given a Text delimited by triple backticks representing a user question, identify the best output of the presentation.
+Select one of the possible output in the following list:
+  "graph", "table", "chart", "map".
+
+The first step is to understand if the user explicitly asks for a specific output type to show the results.
+For example, if the user asks for graph elements such as paths or nodes or relationships, then the output must be a graph in any case.
+
+If the output type is not explicit it is usually graph:
+- "table", only when the user asks about aggregation, ordering, and statistics;
+- "chart", if the users asks for plotting distributions;
+- "map", if the user asks for showing locations, places or other entities with a strong location property;
+
+If you do not understand the output from previous cases the output should be "graph".
+
+Here you can find some examples:
+
+Example: Location of last 10 narcotics related crimes
+Output: {"type": "map", "reason":"type is map because it involves showing locations"}
+
+Example: Distribution of crimes over time
+Output: {"type": "chart", "reason":" type is chart because a distribution can be plotted"}
+
+Example: "Maximum, minimun and average number of crimes per district"
+Output: {"type": "table", "reason":" type is table because aggregations are requested"}
+
+Example: "People involved in or related with crimes investigated by Inspector Morse"
+Output: {"type": "graph","reason":" type is graph because entities and relationships are implied"}
+
+The output must be in JSON format. Do not explain the result do not use code blocks.
+###Text:```{{ question }}```
+###Output:

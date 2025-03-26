@@ -1,0 +1,9 @@
+MATCH (cat:HpoPhenotype {label: "Abnormality of the endocrine system"})
+CALL n10s.inference.nodesInCategory(cat, { 
+    inCatRel: "HAS_PHENOTYPIC_FEATURE", subCatRel: "SUBCLASSOF"})
+YIELD node as dis
+MATCH (dis)-[:HAS_PHENOTYPIC_FEATURE]->(phe:HpoPhenotype)
+RETURN dis.label as disease, collect(DISTINCT phe.label) as features
+ORDER BY size(features) ASC, disease
+SKIP 100
+LIMIT 5

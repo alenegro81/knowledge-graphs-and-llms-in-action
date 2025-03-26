@@ -1,0 +1,3 @@
+neo4j==4.4.11
+scispacy==0.5.1
+https://s3-us-west-2.amazonaws.com/ai2-s2-scispacy/releases/v0.5.1/en_core_sci_md-0.5.1.tar.gz
