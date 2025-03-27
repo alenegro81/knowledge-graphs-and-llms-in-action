@@ -1,1 +1,5 @@
-CREATE DATABASE `hmdd2.0`  OPTIONS { existingData: "use", seedUri:"https://downloads.graphaware.com/neo4j-db-seeds/hmdd2.0-5.4.0-2023-02-20T16-14-21.backup"}
+# Add the following line to the neo4j.conf file
+# dbms.databases.seed_from_uri_providers=URLConnectionSeedProvider
+# then run the following command
+
+CREATE DATABASE `hmdd2.0`  OPTIONS { existingData: "use", seedUri:"https://downloads.graphaware.com/neo4j-db-seeds/hmdd2.0-5.26.4-2025-03-27T16-59-35.backup"}
