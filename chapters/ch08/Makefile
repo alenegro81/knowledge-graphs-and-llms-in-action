@@ -3,7 +3,7 @@ PYTHON=../../venv/bin/python
 
 OPENAI_KEY="your OPENAI API key"
 OPENAI_BASE_URL="https://api.openai.com/v1"
-OPENAI_MODEL="gpt-4"
+OPENAI_MODEL="gpt-4o-mini"
 
 
 init:

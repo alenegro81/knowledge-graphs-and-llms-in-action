@@ -12,7 +12,7 @@ from neo4j.exceptions import ClientError as Neo4jClientError
 class DiariesImporter(BaseImporter):
     def __init__(self, argv):
         super().__init__(command=__file__, argv=argv)
-        self._database = "rac2"
+        #self._database = "rac"
         self.create_indices()
 
     def create_indices(self):
@@ -67,8 +67,8 @@ class FullKG(BaseImporter):
     def __init__(self, argv):
         super().__init__(command=__file__, argv=argv)
         self.cache_folder: Path = None
-        self._database = "rac2"
-        self.openai_model = "gpt-4"
+        #self._database = "rac"
+        self.openai_model = "gpt-4o-mini"
         self.openai_key = None
         self.openai_url = None
 
@@ -236,6 +236,7 @@ class FullKG(BaseImporter):
             print(f"Processing page {p['id']}")
             output = self.openai_query(client, gpt_prompt_segments, p['text'], key=p['key'])
             gpt_parsed = self.parse_gpt_output(output)
+            print(gpt_parsed)
             if gpt_parsed['failed']:
                 failed_pages.append(p)
             else:  # store only fully-correct outputs, rerun the pages with failures later
@@ -619,7 +620,7 @@ if __name__ == "__main__":
 
     if not base_path:
         print("Source path directory is mandatory. Setting it to default.")
-        base_path = "../../data/"
+        base_path = "../../../data/"
     base_path = Path(base_path)
 
     if not base_path.is_dir():
@@ -639,21 +640,21 @@ if __name__ == "__main__":
     base_path = kg.source_dataset_path
     if not base_path:
         print("Source path directory is mandatory. Setting it to default.")
-        base_path = "../../data/"
+        base_path = "../../../data/"
     base_path = Path(base_path)
 
     prompt_path = kg.source_dataset_path
     if not prompt_path:
         print("Prompt path directory is mandatory. Setting it to default.")
-        prompt_path = "../../data/"
+        prompt_path = "../../../data/"
     prompt_path = Path(prompt_path)
 
     kg.openai_key = os.environ.get("OPENAI_KEY")
     kg.openai_url = os.environ.get("OPENAI_BASE_URL")
-    kg.openai_model = os.environ.get("OPENAI_MODEL", "gpt-4")
+    kg.openai_model = os.environ.get("OPENAI_MODEL", "gpt-4o-mini")
 
     # set up a cache folder for LLM responses
-    kg.cache_folder = Path("../../data/cache_llm")
+    kg.cache_folder = Path("../../../data/cache_llm")
     kg.cache_folder.mkdir(exist_ok=True)
 
     # build a KG layer (normalise & resolve entities)

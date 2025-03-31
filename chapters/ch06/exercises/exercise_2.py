@@ -6,7 +6,7 @@ sys.path.append('../importer')
 from neo4j import GraphDatabase, basic_auth
 from step2__enrich_organizations import query_wikidata_entity
 
-NEO4J_DB = "news"
+NEO4J_DB = "neo4j"
 
 SPARQL_2 = """SELECT ?personX ?personXLabel ?dob (GROUP_CONCAT(DISTINCT ?occupationLabel; SEPARATOR=";") AS ?occupations)
     (GROUP_CONCAT(DISTINCT ?fieldOfWorkLabel; SEPARATOR=";") AS ?fieldsOfWork)
@@ -35,7 +35,7 @@ if __name__ == "__main__":
     #  "Enrich the Person nodes by their date of birth, occupation, fields of work, and company ownership. "
 
     # Initialise Neo4j driver
-    driver = GraphDatabase.driver('bolt://localhost:7687', auth=basic_auth('neo4j', 'neo'))
+    driver = GraphDatabase.driver('bolt://localhost:7687', auth=basic_auth('neo4j', 'password'))
 
     # Get entities to enrich
     QUERY_GET_INPUTS = "MATCH (p:Person) RETURN p.name AS name"

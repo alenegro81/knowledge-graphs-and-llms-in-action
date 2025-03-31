@@ -6,8 +6,8 @@ if __name__ == "__main__":
 
     # load standard English NLP and NER models
     # start with downloading the models by running this command: `python -m spacy download en_core_web_md`
-    # nlp = spacy.load("en_core_web_sm")
-    nlp = spacy.load("en_core_web_md")
+    nlp = spacy.load("en_core_web_sm")
+    #nlp = spacy.load("en_core_web_md")
 
     doc = nlp(text)
 
