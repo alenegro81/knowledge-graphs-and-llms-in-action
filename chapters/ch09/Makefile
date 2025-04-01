@@ -9,8 +9,12 @@ download:
 	curl "https://uts-ws.nlm.nih.gov/download?url=https://download.nlm.nih.gov/mlb/utsauth/USExt/SnomedCT_USEditionRF2_PRODUCTION_20220901T120000Z.zip&apiKey=$(APIKEY)" -o ../../dataset/ontology/snomed/SnomedCT_USEditionRF2_PRODUCTION_20220901T120000Z.zip
 	curl "https://uts-ws.nlm.nih.gov/download?url=https://download.nlm.nih.gov/umls/kss/2022AB/umls-2022AB-mrconso.zip&apiKey=$(APIKEY)" -o ../../dataset/ontology/umls/umls-2022AB-mrconso.zip
 	curl "https://lhncbc.nlm.nih.gov/semanticnetwork/download/SemGroups.txt" -o ../../dataset/ontology/umls/SemGroups.txt
+	curl -L "https://drive.usercontent.google.com/download?id=19_FLk3cFXHINbQOP5ypWi15ixDgFXetR&confirm=xxx" -o ../../dataset/ocred_documents.zip
+	
 	unzip ../../dataset/ontology/snomed/SnomedCT_USEditionRF2_PRODUCTION_20220901T120000Z.zip -d ../../dataset/ontology/snomed/
 	unzip ../../dataset/ontology/umls/umls-2022AB-mrconso.zip -d ../../dataset/ontology/umls/
+	unzip -q -j ../../dataset/ocred_documents.zip -d ../../dataset/ocred_documents/
+	find ../../dataset/ocred_documents/ -name '._*' -delete
 	mv ../../dataset/ontology/snomed/SnomedCT_USEditionRF2_PRODUCTION_20220901T120000Z/Full/Terminology/sct2_Relationship_Full_US1000124_20220901.txt ../../dataset/ontology/snomed/sct2_Relationship_Full_US1000124_20220901.txt
 	mv ../../dataset/ontology/snomed/SnomedCT_USEditionRF2_PRODUCTION_20220901T120000Z/Full/Terminology/sct2_Description_Full-en_US1000124_20220901.txt ../../dataset/ontology/snomed/sct2_Description_Full-en_US1000124_20220901.txt
 	mv ../../dataset/ontology/snomed/SnomedCT_USEditionRF2_PRODUCTION_20220901T120000Z/Full/Terminology/sct2_TextDefinition_Full-en_US1000124_20220901.txt ../../dataset/ontology/snomed/sct2_TextDefinition_Full-en_US1000124_20220901.txt
