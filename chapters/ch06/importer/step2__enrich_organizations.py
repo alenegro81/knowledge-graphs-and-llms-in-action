@@ -25,7 +25,7 @@ def query_wikidata_entity(query: str, entity: str, cache_folder: Path = None):
         response = requests.get(URL, params={'format': "json"})
         if response.status_code == 429:
             raise RuntimeError("Too many requests")
-        time.sleep(1)  # we wait a second if we get a response to avoid "Too Many Requests" errors.
+        time.sleep(1)  # wait a second to avoid "Too Many Requests" errors.
         parsed = json.loads(response.content)
     except json.decoder.JSONDecodeError as e:
         print(f"JSONDecodeError: Couldn't process entity {entity}: {e}")
@@ -44,7 +44,7 @@ def query_wikidata_entity(query: str, entity: str, cache_folder: Path = None):
 class OrgEnricher(BaseImporter):
     def __init__(self, argv):
         super().__init__(command=__file__, argv=argv)
-        self._database = "news"
+        #self._database = "news"
         self.cachePath = None
 
         self.QUERY_GET_INPUTS = """

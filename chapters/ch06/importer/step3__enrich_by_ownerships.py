@@ -13,7 +13,7 @@ from step2__enrich_organizations import query_wikidata_entity
 class OwnershipEnricher(BaseImporter):
     def __init__(self, argv):
         super().__init__(command=__file__, argv=argv)
-        self._database = "news"
+        #self._database = "news"
         self.cache_folder = None
 
         self.QUERY_GET_INPUTS = """MATCH (e:Organization)

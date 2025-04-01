@@ -11,7 +11,7 @@ from util.base_importer import BaseImporter
 class BBCImporter(BaseImporter):
     def __init__(self, argv):
         super().__init__(command=__file__, argv=argv)
-        self._database = "news"
+        #self._database = "news"
 
         # load standard English NLP and NER models
         #  NORP entity = Nationalities or religious or political groups
@@ -129,6 +129,7 @@ class BBCImporter(BaseImporter):
             )
         """
         size = self.count_documents(data_path)
+        print(f"Importing {size} documents from {data_path}...")
         self.batch_size = 50
         self.batch_store(import_document_query, self.get_documents(data_path), size=size, desc="importing documents")
 
@@ -136,7 +137,7 @@ class BBCImporter(BaseImporter):
 class BBCKeywordImporter(BaseImporter):
     def __init__(self, argv):
         super().__init__(command=__file__, argv=argv)
-        self._database = "news"
+        #self._database = "news"
         self.nlp = spacy.load("en_core_web_sm")
         # add keyword extraction to the NLP pipeline
         self.nlp.add_pipe("textrank")
