@@ -1,0 +1,17 @@
+MATCH path = (c:Compound)-[:BINDS_CbG]-(g:Gene)<-[:EXPRESSES_AeG]-(a:Anatomy)<-[:LOCALIZES_DlA]-(d:Disease)
+WHERE c.name = 'Metformin' AND d.name = 'type 2 diabetes mellitus'
+WITH
+[
+  count{(c)-[:BINDS_CbG]-()},
+  count{()-[:BINDS_CbG]-(g)},
+  count{(g)<-[:EXPRESSES_AeG]-()},
+  count{()-[:EXPRESSES_AeG]-(a)},
+  count{(a)<-[:LOCALIZES_DlA]-()},
+  count{()-[:LOCALIZES_DlA]-(d)}
+] AS degrees, path, d
+WITH
+  d.identifier AS disease_id,
+  d.name AS disease_name,
+  count(path) AS PC,
+  sum(reduce(pdp = 1.0, d in degrees| pdp * d ^ -0.4)) AS DWPC
+RETURN disease_id, disease_name, PC, DWPC

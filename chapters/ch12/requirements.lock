@@ -1,0 +1,6 @@
+networkx
+matplotlib
+numpy
+node2vec
+scikit-learn
+pandas

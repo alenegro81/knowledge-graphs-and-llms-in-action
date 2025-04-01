@@ -1,0 +1,19 @@
+MATCH path = (c:Compound)-[:BINDS_CbG]-(g1:Gene)-[:PARTICIPATES_GpPW]->(pw:Pathway)<-[:PARTICIPATES_GpPW]-(g2:Gene)-[:ASSOCIATES_DaG]-(d:Disease)
+WHERE c.name = 'Metformin' AND d.name = 'type 2 diabetes mellitus'
+WITH
+[
+  count{(c)-[:BINDS_CbG]-()},
+  count{()-[:BINDS_CbG]-(g1)},
+  count{(g1)-[:PARTICIPATES_GpPW]->()},
+  count{()-[:PARTICIPATES_GpPW]->(pw)},
+  count{(pw)<-[:PARTICIPATES_GpPW]-()},
+  count{()<-[:PARTICIPATES_GpPW]-(g2)},
+  count{(g2)-[:ASSOCIATES_DaG]-()},
+  count{()-[:ASSOCIATES_DaG]-(d)}
+] AS degrees, path, d
+WITH
+  d.identifier AS disease_id,
+  d.name AS disease_name,
+  count(path) AS PC,
+  sum(reduce(pdp = 1.0, d in degrees| pdp * d ^ -0.4)) AS DWPC
+RETURN disease_id, disease_name, PC, DWPC
