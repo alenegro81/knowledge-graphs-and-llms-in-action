@@ -29,6 +29,7 @@ class SnomedNamesImporter(BaseImporter):
         snomed_names_concepts_query = """
         UNWIND $batch as item
         MATCH (e1:SnomedEntity)-[r:SNOMED_RELATION {id: item.conceptId}]->(e2:SnomedEntity)
+        WHERE item.conceptId <> '116680003' AND r.id = item.conceptId 
         SET r.type = CASE 
                 WHEN r.type IS NULL THEN item.termAsType
                 ELSE r.type END,
@@ -49,7 +50,6 @@ class SnomedNamesImporter(BaseImporter):
         size = self.get_csv_size(snomedNames_file)
         self.batch_store(snomed_names_concepts_query, self.get_rows(snomedNames_file), size=size)
         self.batch_store(snomed_names_entities_query, self.get_rows(snomedNames_file), size=size)
-
 
 
 def csv_as_dict_list(path):

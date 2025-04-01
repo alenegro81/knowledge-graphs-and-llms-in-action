@@ -1,4 +1,6 @@
+import scispacy
 import spacy
+from scispacy.linking import EntityLinker
 
 
 class EntityExtractor:
