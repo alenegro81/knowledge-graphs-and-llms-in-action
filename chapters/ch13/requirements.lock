@@ -1,0 +1,6 @@
+networkx
+numpy
+node2vec
+matplotlib
+scikit-learn
+torch

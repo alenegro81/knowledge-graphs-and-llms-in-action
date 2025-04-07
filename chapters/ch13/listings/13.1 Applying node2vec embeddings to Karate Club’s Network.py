@@ -32,7 +32,7 @@ def decode_similarity(model, node1, node2):
     return model.wv.similarity(str(node1), str(node2))
 
 
-def visualize_embeddings(model, G):
+def visualize_graph_and_embeddings(model, G):
     embeddings = np.zeros((len(G.nodes()), model.vector_size))
     for i, node in enumerate(G.nodes()):
         embeddings[i] = model.wv[str(node)]
@@ -40,16 +40,30 @@ def visualize_embeddings(model, G):
     tsne = TSNE(n_components=2, random_state=42)
     node_pos_2d = tsne.fit_transform(embeddings)
 
-    plt.figure(figsize=(10, 8))
+    fig, axes = plt.subplots(1, 2, figsize=(18, 8))
+
+    # Left plot: original graph
+    pos = nx.spring_layout(G, seed=42)
     colors = ['red' if G.nodes[node]['faction'] == 0 else 'blue'
               for node in G.nodes()]
+    nx.draw(
+        G,
+        pos,
+        ax=axes[0],
+        with_labels=True,
+        node_color=colors,
+        node_size=500,
+        font_size=10
+    )
+    axes[0].set_title("Original Karate Club Graph")
 
-    plt.scatter(node_pos_2d[:, 0], node_pos_2d[:, 1], c=colors)
-
+    # Right plot: node embeddings
+    axes[1].scatter(node_pos_2d[:, 0], node_pos_2d[:, 1], c=colors, s=100)
     for i, node in enumerate(G.nodes()):
-        plt.annotate(str(node), (node_pos_2d[i, 0], node_pos_2d[i, 1]))
+        axes[1].annotate(str(node), (node_pos_2d[i, 0], node_pos_2d[i, 1]), fontsize=9)
+    axes[1].set_title("Node2Vec Embeddings (t-SNE)")
 
-    plt.title("Node2Vec Embeddings of Karate Club Network")
+    plt.tight_layout()
     plt.show()
 
 
@@ -58,7 +72,7 @@ print("Similarity between instructor (0) and their close ally (1):",
 print("Similarity between instructor (0) and president (33):",
       decode_similarity(model, 0, 33))
 
-visualize_embeddings(model, G)
+visualize_graph_and_embeddings(model, G)
 
 
 def analyze_community_structure(model, G):
