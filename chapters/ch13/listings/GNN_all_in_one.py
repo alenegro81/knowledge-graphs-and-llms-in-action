@@ -60,17 +60,18 @@ class MultiHeadGraphAttention(nn.Module):
 
 
 class TransformerStyleGraphAttention(nn.Module):
-    def __init__(self, feature_dim, num_heads=1, dropout=0.1):
+    def __init__(self, feature_dim, neighbors_feature_dim, num_heads=1, dropout=0.1):
         super().__init__()
         self.feature_dim = feature_dim
+        self.neighbors_feature_dim = neighbors_feature_dim
         self.num_heads = num_heads
         self.head_dim = feature_dim // num_heads
 
         assert feature_dim % num_heads == 0, "feature_dim must be divisible by num_heads"
 
         self.query_transform = nn.Linear(feature_dim, feature_dim)
-        self.key_transform = nn.Linear(feature_dim, feature_dim)
-        self.value_transform = nn.Linear(feature_dim, feature_dim)
+        self.key_transform = nn.Linear(neighbors_feature_dim, feature_dim)
+        self.value_transform = nn.Linear(neighbors_feature_dim, feature_dim)
 
         # Output projection
         self.output_transform = nn.Linear(feature_dim, feature_dim)
@@ -99,24 +100,25 @@ class TransformerStyleGraphAttention(nn.Module):
 
         # Multi-head attention
         Q = self.query_transform(node_features_expanded)  # [batch, nodes, 1, feature_dim]
-        K = self.key_transform(neighbor_features)  # [batch, nodes, neighbors, feature_dim]
-        V = self.value_transform(neighbor_features)  # [batch, nodes, neighbors, feature_dim]
+        K = self.key_transform(neighbor_features)  # [batch, nodes, neighbors, neighbors_feature_dim]
+        V = self.value_transform(neighbor_features)  # [batch, nodes, neighbors, neighbors_feature_dim]
 
-        # Reshape for multi-head attention
+        # Reshape for multi-head attention [ batch, nodes, heads,  1 or neighbors, feature_dim/heads]
         if self.num_heads > 1:
             Q = Q.view(batch_size, num_nodes, 1, self.num_heads, self.head_dim).transpose(2, 3)
             K = K.view(batch_size, num_nodes, max_neighbors, self.num_heads, self.head_dim).transpose(2, 3)
             V = V.view(batch_size, num_nodes, max_neighbors, self.num_heads, self.head_dim).transpose(2, 3)
 
         # Calculate attention scores
-        attention_scores = torch.matmul(Q, K.transpose(-2, -1))  # [..., 1, neighbors]
+        attention_scores = torch.matmul(Q, K.transpose(-2, -1))  # [batch,nodes, heads, 1, neighbors]
         attention_scores = attention_scores / math.sqrt(self.head_dim)
 
         # Apply mask if provided
         if mask is not None:
-            # Expand mask for broadcasting: [batch, nodes, neighbors] -> [batch, nodes, 1, neighbors]
+            # Expand mask for broadcasting
             if self.num_heads > 1:
-                mask = mask.unsqueeze(2).expand(-1, -1, self.num_heads, -1)
+                # [batch, nodes, neighbors] -> [batch, nodes, 1 , 1, neighbors] -> [batch, nodes, heads , 1, neighbors]
+                mask = mask.unsqueeze(2).unsqueeze(2).expand(-1, -1, self.num_heads, -1, -1)
             else:
                 mask = mask.unsqueeze(2)
             attention_scores = attention_scores.masked_fill(mask == 0, -1e9)
@@ -229,11 +231,17 @@ class JumpingKnowledge(nn.Module):
         )
 
     def forward(self, layer_representations):
-        stacked = torch.stack(layer_representations, dim=1)
+        stacked = torch.stack(layer_representations, dim=2)
 
-        output, _ = self.lstm(stacked)
+        batch_size, num_nodes, num_layers, feature_size = stacked.shape
 
-        return output[:, -1, :]
+        reshaped = stacked.reshape(batch_size * num_nodes, num_layers, feature_size)
+        output, _ = self.lstm(reshaped)
+        last_output = output[:, -1, :]
+
+        final_output = last_output.reshape(batch_size, num_nodes, -1)
+
+        return final_output
 
 
 class FlexibleGNN(nn.Module):
@@ -277,7 +285,7 @@ class FlexibleGNN(nn.Module):
         self.input_proj = nn.Linear(input_dim, hidden_dim)
 
         # Create aggregators if needed for certain architectures
-        if architecture == 'graphsage':
+        if architecture in ['graphsage', 'gated']:
             if aggregator == 'mean':
                 self.aggregator = MeanAggregator()
             elif aggregator == 'max':
@@ -291,7 +299,7 @@ class FlexibleGNN(nn.Module):
             if architecture == 'gat':
                 self.layers.append(MultiHeadGraphAttention(hidden_dim, num_heads))
             elif architecture == 'transformer':
-                self.layers.append(TransformerStyleGraphAttention(hidden_dim, num_heads, dropout))
+                self.layers.append(TransformerStyleGraphAttention(hidden_dim, input_dim, num_heads, dropout))
             elif architecture == 'structural':
                 self.layers.append(StructuralGraphTransformer(hidden_dim, num_heads, max_degree))
             elif architecture == 'graphsage':
@@ -422,7 +430,7 @@ def create_flexible_gnn(config):
 # Example configurations
 gat_config = {
     'input_dim': 64,
-    'hidden_dim': 128,
+    'hidden_dim': 64,
     'output_dim': 32,
     'architecture': 'gat',
     'num_heads': 8
@@ -439,7 +447,7 @@ transformer_config = {
 
 sage_config = {
     'input_dim': 64,
-    'hidden_dim': 128,
+    'hidden_dim': 64,
     'output_dim': 32,
     'architecture': 'graphsage',
     'aggregator': 'mean'
@@ -447,7 +455,7 @@ sage_config = {
 
 structural_config = {
     'input_dim': 64,
-    'hidden_dim': 128,
+    'hidden_dim': 64,
     'output_dim': 32,
     'architecture': 'structural',
     'num_heads': 4,
@@ -456,7 +464,7 @@ structural_config = {
 
 gated_config = {
     'input_dim': 64,
-    'hidden_dim': 128,
+    'hidden_dim': 64,
     'output_dim': 32,
     'architecture': 'gated',
     'aggregator': 'max',
