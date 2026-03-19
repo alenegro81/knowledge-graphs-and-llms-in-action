@@ -1,4 +1,5 @@
 neo4j~=4.4
 openai~=1.12
+httpx<0.28
 
 

@@ -637,28 +637,16 @@ if __name__ == "__main__":
 
     kg = FullKG(argv=sys.argv[1:])
 
-    base_path = kg.source_dataset_path
-    if not base_path:
-        print("Source path directory is mandatory. Setting it to default.")
-        base_path = "../../../data/"
-    base_path = Path(base_path)
-
-    prompt_path = kg.source_dataset_path
-    if not prompt_path:
-        print("Prompt path directory is mandatory. Setting it to default.")
-        prompt_path = "../../../data/"
-    prompt_path = Path(prompt_path)
-
     kg.openai_key = os.environ.get("OPENAI_KEY")
     kg.openai_url = os.environ.get("OPENAI_BASE_URL")
     kg.openai_model = os.environ.get("OPENAI_MODEL", "gpt-4o-mini")
 
     # set up a cache folder for LLM responses
-    kg.cache_folder = Path("../../../data/cache_llm")
+    kg.cache_folder = base_path / "cache_llm"
     kg.cache_folder.mkdir(exist_ok=True)
 
     # build a KG layer (normalise & resolve entities)
-    kg.build_kg(prompt_path)
+    kg.build_kg(base_path)
 
     # run graph algorithms
     kg.run_gds()
